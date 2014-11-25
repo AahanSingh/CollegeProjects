@@ -1,0 +1,764 @@
+
+/*						PROJECT- HOTEL CALIFORNIA
+						DEVELOPED BY   - AKHIL RAJ AZHIKODAN 
+								AAHAN SINGH
+--------------------------------------------------------------------------------------------------------
+HOTEL INFORMATION-
+					No of rooms - 100
+Classifications of Rooms -		(	[n]= n rooms  )
+			
+			->		Normal Rooms[55]-  1) Single Cot[5] - 
+									a)  AC	
+										-	TV	  [2]  room_no = 101,102
+										-	NO TV [1]  room_no = 103
+									b) 	Non- AC 
+										-	TV	  [1]	room_no = 104
+										-	NO TV [1]   room_no = 105
+						 	  2) King Bed [30]	-
+					   				a)  AC
+										-	TV    [15]	room_no = 106-120
+										-	NO TV [5]	room_no = 121-125
+					   				b)  Non- AC
+										-	TV    [5]	room_no = 126-130
+										-	NO TV [5]	room_no = 131-135
+						   	  3)Double Cot [10]-
+									a)	AC	
+				 						-	TV	  [4]	room_no = 136-139
+										-	NO TV [1]	room_no = 140
+					   				b)	Non- AC
+				 						-	TV    [4]	room_no = 141-144
+										-	NO TV [1]	room_no = 145
+						 	  4)King + Single [10]-
+									a) AC
+										-	TV	  [4]	room_no = 146-149
+										-	NO TV [1]	room_no = 150
+									b) Non - AC
+										-	TV	  [4]	room_no = 151-154
+										-	NO TV [1]	room_no = 155
+			->		Luxury Rooms [40]-
+							    1) King  [25]-
+									a)Beach View [15]	room_no = 156-170
+									b) Road View [10]	room_no = 171-180
+							   2)Double Bed [5]-
+						   			a)Beach View [2]	room_no = 181-182
+									b) Road View [3]	room_no = 183-185
+							   3) King+ Cot [10] -
+						   			a)Beach View [5]	room_no = 186-190
+									b) Road View [5]	room_no = 191-195
+
+			->		Suites `[5]	- 
+							1) Penthouse -
+								a) Beach view
+									- Indoor pool [1]	 room_no = 196
+									- Indoor Jacuzzi [1] room_no = 197
+								b) City View
+									- Indoor pool	[1]	room_no = 198
+									- Indoor Jacuzzi [1] room_no = 199
+				   		  2) Honeymoon Suite	[1]			room_no=200
+---------------------------------------------------------------------------------------------------
+IMPLEMENTATIONS
+		Please read the given info before going through the code-
+					
+			The Data  of reserved rooms are stored in the file "new.bin". 
+			The Data is of the structure Booked.
+					
+			main()   gives the user options to reserve, view, cancel
+					
+			check()  is a reservation function. It gives user an option on the type of room (normal,lux,suite)
+					
+			normal_room() Function takes care of normal room reservation.
+					
+			search_vacant_room(int a, int b)    searches the file "new" for availability of rooms. 'a' is the starting room no,
+							    'b' is the end room no
+					
+			book_room()   writes into the file the object of Booked.
+					
+			get_details()  takes in the details of the person reserving
+**new**		luxury_room() Function takes care of luxury room reservation.
+**new**		suite()			takes care of suite & Honeymoon suite(Honeymoon suite)
+-----------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+PROJECT LOG		[PLEASE LOG IN THE DETAILS OF THE WORK HERE]
+				-AKHIL [23/10/2014  11:00]	-completed the template of the the project
+											-Documented the project details of the project
+											-Completed the main function
+											-completed the check function
+				-AKHIL [24/10/2014  12:00]  -Completed write and read and write functionality in check and view_reservation function
+				       						-Completed the get_details function
+				       						-Completed the normal rooms(function to choose normal rooms)
+				       						-Completed search_vacant_room function
+				-AAHAN [28/10/2014 	8:10 ]	-(START AT LINE 361)Added functions for luxury rooms and suites
+				-AAHAN [1/11/2014	12:00]	- COMPLETED RESERVATION VIEW FUNCTION AND FIXED THE SEARCH FOR VACANT ROOM FUNCTION
+				-AAHAN [8-11-2014 	2:41]	- MODIFIED THE VIEW RESERVATION FUNCTION AND WROTE THE PRINT CATEGORY FUNCTION
+				-AKHIL [8-11-2014   4:20] 	- Modified the VIEW RESERVATION FUNCTION.
+											- Completed the CANCEL RESERVATION FUNCTION
+											- Modified search_vacant_room
+				-AAHAN [8-11-2014 9:18]		- ADDED DATE FUNCTIONALITY BUT THERE EXISTS A GLITCH WHERE AFTER THE 1ST WRITE INTO THE FILE.SUBSEQUENT WRITES DO NOT WORK. I DONT KNOW WHY. CHECK IT OUT
+				-AKHIL [9-11-2014 11:20]	- Debugged the DATE FUNCTIONALITY.
+											- ADDED A ADMIN entry to VIEW_RESRVATIONS.
+				-AAHAN [2-11-2014 12:52]	- TESTED THE PROGRAM AND MADE FINAL CHANGES.
+---------------------------------------------------------------------------------------------------------------------------------------
+*********************************************CONGRATS THE PROJECT IS NOW COMPLETE******************************************************
+---------------------------------------------------------------------------------------------------------------------------------------
+*/
+// #########################################################################################################################################
+//######################################################   CODE   ##########################################################################
+//##########################################################################################################################################
+#include<stdio.h>
+//#include<conio.h>		//**************HAVE REMOVED LINE 94 AS THIS DOESNT EXIST IN LINUX*********
+#include<stdlib.h>
+#include<string.h>
+typedef struct			// Structure to represent the Date. Objects used in Structure Booked
+{		int day;
+		int month;
+		int year;
+}date;
+
+typedef struct  			// Structure to store the information of reservation. Objects are written in to file
+{
+	char name[20];
+	int no_occupants;
+	date in_date;
+	date out_date;
+	int room_no;
+}Booked;
+void luxury_room();
+void suite();
+
+Booked  get_details()
+{
+	Booked temp;
+	system("clear");
+	printf("\n\n\n\n\n\t\t\t\tHOTEL CALIFORNIA\n\n\n");
+	printf("\n\n\n\t\t\t NAME :");
+	scanf ("%s", temp.name);
+	printf("\n\n\t\t\tNUMBER OF OCCUPANTS :");
+	scanf("%d",&temp.no_occupants);
+	printf("\n\n\t\t\tCHECK IN DATE (DD MM YYYY) : ");
+	scanf("%d %d %d",&temp.in_date.day,&temp.in_date.month,&temp.in_date.year);
+	printf("\n\t\t\tCHECK OUT DATE (DD MM YYYY) : ");
+	scanf("%d %d %d",&temp.out_date.day,&temp.out_date.month,&temp.out_date.year);
+	return temp;
+}
+
+//--------------------------------------------------------------------------------------------
+//	FUNCTION - 
+
+void book_room(Booked temp)
+{
+	Booked *point;
+	point=&temp;
+	FILE * file= fopen("hotel.bin", "ab");
+	if (file != NULL)
+	{
+    	fwrite(point, sizeof(Booked), 1, file);
+    	fclose(file);
+	}
+}	
+//----------------------------------------------------------------------------------------------
+
+
+
+
+//--------------------------------------------------------------------------------------------------------
+//Function - CHECKS FOR A VACANCY  IN THE GIVEN RANGE OF ROOM NUMBERS ON THE GIVEN DATES.
+void search_for_vacant_rooms(int a,int b)
+{	
+	Booked temp,temp1,*out;
+	out=&temp1;
+	temp=get_details();
+	int inD=temp.in_date.day;
+	int inM=temp.in_date.month;
+	int inY=temp.in_date.year;
+	int outD=temp.out_date.day;
+	int outM=temp.out_date.month;
+	int outY=temp.out_date.year;
+	int i=a;
+	FILE * file= fopen("hotel.bin", "rb");
+    if (file != NULL)
+	{
+    	up:
+    	if(i<=b)
+    	{
+    		while(!feof( file ))
+    		{
+    			fread(out, sizeof(Booked), 1, file);
+    			if((out->room_no==i))
+    			{
+    				if((outY <= out->in_date.year) || (inY >= out->out_date.year))
+    				{
+    					if((outY!= out->out_date.year) && (inY!=out->in_date.year))
+    						goto jump;
+    					if((outM <= out->in_date.month) || (inM >= out->out_date.month))
+    					{
+    						if((outM!= out->out_date.month) && (inM!=out->in_date.month))
+    							goto jump;
+    						if((outD < out->in_date.day) || (inD > out->out_date.day))
+    						{
+    							jump:
+    							fclose(file);
+    							temp.room_no=i;
+    							book_room(temp);
+    							return;
+    							
+    						}
+    					}
+    				}
+					i++;		// used for comparing with rooms in the file with room nos in the hotel
+					goto up;
+    			}
+    		}
+    	}
+		if(i>b)	// self explanatory
+		{
+			printf("NO ROOMS OF SELECTED CATEGORY AVAILABLE\n");
+			printf("Enter a n.o. to return");
+			scanf("%d",&i);
+			return;
+		}
+	}
+    fclose(file);
+    temp.room_no=i;
+    book_room(temp);
+}	
+
+//--------------------------------------------------------------------------------------------------------
+
+
+
+
+////////////////////////////////////////////////////////NORMAL ROOM////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------------------------------
+//FUNCTION 1 ) 1) Takes in requirements of user
+//			   2) checks availability
+//			   3) calls book_room
+void normal_room_choose(int n)
+{		int choice;
+		while(1)
+		{	
+			system("clear");
+			printf("\n\n\n\n\n\t\t\t\tHOTEL CALIFORNIA\n\n\t\t\t--NORMAL ROOMS--\n\n\n");
+			printf("\t\t\tChoose \n\n\t\t\t\t1.AC + TV\n\n\t\t\t\t2.AC + NO TV\n\n\t\t\t\t3.NON AC + TV\n\n\t\t\t\t4.NON AC + NO TV\n\n\t\t\t\t4.BACK");
+			scanf("%d",&choice);
+			switch(choice)
+				{ 	case 1:if(n==1)
+								search_for_vacant_rooms(101,102);
+							else if(n==2)
+								search_for_vacant_rooms(106,120);
+							else if(n==3)
+								search_for_vacant_rooms(136,139);
+							else if(n==4)
+								search_for_vacant_rooms(146,149);
+							return;
+					case 2:if(n==1)
+								search_for_vacant_rooms(103,103);
+							else if(n==2)
+								search_for_vacant_rooms(121,125);
+							else if(n==3)
+								search_for_vacant_rooms(140,140);
+							else if(n==4)
+								search_for_vacant_rooms(150,150);
+							return;
+					case 3:if(n==1)
+								search_for_vacant_rooms(104,104);
+							else if(n==2)
+								search_for_vacant_rooms(126,130);
+							else if(n==3)
+								search_for_vacant_rooms(141,144);
+							else if(n==4)
+								search_for_vacant_rooms(151,154);
+							return;
+					case 4:if(n==1)
+								search_for_vacant_rooms(105,105);
+							else if(n==2)
+								search_for_vacant_rooms(131,135);
+							else if(n==3)
+								search_for_vacant_rooms(145,145);
+							else if(n==4)
+								search_for_vacant_rooms(155,155);
+							return;
+					case 5:return;
+					default:printf("PLEASE ENTER A VALID OPTION");
+					//getch();
+				}
+		}
+}
+//----------------------------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------------------------
+//	FUNCTION - 1) Takes in requirements of user
+//			   2) checks availability
+//			   3) calls book_room
+void normal_room()
+{		int choice;
+		while(1)
+		{	
+			system("clear");
+			printf("\n\n\n\n\n\t\t\t\tHOTEL CALIFORNIA\n\n\t\t\t--NORMAL ROOMS--\n\n\n");
+			printf("\t\t\tCHOOSE THE TYPE OF ROOM\n\n\t\t\t\t1.SINGLE BED\n\n\t\t\t\t2.KING SIZE BED\n\n\t\t\t\t3.DOUBLE COT\n\n\t\t\t\t4.KING SIZE BED + SINGLE COT\n\n\t\t\t\t5.BACK");
+			scanf("%d",&choice);
+			switch(choice)
+				{ 	case 1:normal_room_choose(1);
+							return;
+					case 2:normal_room_choose(2);
+						   return;
+					case 3:normal_room_choose(3);
+						   return;
+					case 4:normal_room_choose(4);
+						   return;
+					case 5:return;
+					default:printf("PLEASE ENTER A VALID OPTION\n");
+				//	//getch();
+				}
+		}
+}
+//---------------------------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////LUXURY ROOMS , SUITES, Honeymoon suite(Honeymoon suite)///////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void suite_choose(int n)
+{
+	int choice,addon;
+	while(1)
+	{
+		if(n!=2)
+		{
+			
+			system("clear");
+			printf("\n\n\n\n\n\t\t\t\tHOTEL CALIFORNIA\n\n\t\t\t--SUITES--\n\n\n");
+			printf("\t\t\tCHOOSE \n\n\t\t\t\t1.BEACH VIEW\n\n\t\t\t\t2.CITY VIEW TV\n\n\t\t\t\t3.BACK");
+			scanf("%d",&choice);
+			printf("\t\t\tCHOOSE \n\n\t\t\t\t1.INDOOR POOL\n\n\t\t\t\t2.INDOOR JACUZZI\n\n\t\t\t\t3.BACK");
+			scanf("%d",&addon);
+			if((addon==1) || (addon==2))
+			{
+				switch(choice)///***********only for penthouse********
+				{ 		case 1:		//		******beach view*******
+							if(addon==1)// 	+pool
+								search_for_vacant_rooms(196,196);
+							if(addon==2)//	+jacuzzi
+								search_for_vacant_rooms(197,197);
+							return;
+						case 2://		******city view*******
+							if(addon==1)// 	+pool
+								search_for_vacant_rooms(198,198);
+							if(addon==2)//	+jacuzzi
+								search_for_vacant_rooms(199,199);
+							return;
+						case 3:return;
+						default:printf("PLEASE ENTER A VALID OPTION\n");
+						//getch();
+				}
+			}
+		}
+		search_for_vacant_rooms(200,200);
+		return;
+	}//end of loop
+}
+void suite()
+{
+	int choice;
+	while(1)
+	{
+		
+		system("clear");
+		printf("\n\n\n\n\n\t\t\t\tHOTEL CALIFORNIA\n\n\t\t\t--SUITES--\n\n\n");
+		printf("\t\t\tCHOOSE THE TYPE OF ROOM\n\n\t\t\t\t1.PENTHOUSE\n\n\t\t\t\t2.HONEYMOON SUITE\n\n\t\t\t\t3.BACK");
+		scanf("%d",&choice);
+		switch(choice)
+		{
+			case 1:suite_choose(1);
+					return;
+			case 2:suite_choose(2);
+				   return;
+			case 3:return;
+			default:printf("PLEASE ENTER A VALID OPTION\n");
+			//getch();
+		}
+	}
+}
+
+void luxury_room_choose(int n)
+{
+	int choice;
+	while(1)
+	{
+		
+		system("clear");
+		printf("\n\n\n\n\n\t\t\t\tHOTEL CALIFORNIA\n\n\t\t\t--NORMAL ROOMS--\n\n\n");
+		printf("\t\t\tCHOOSE \n\n\t\t\t\t1.BEACH VIEW\n\n\t\t\t\t2.CITY VIEW\n\n\t\t\t\t3.BACK");
+		scanf("%d",&choice);
+		switch(choice)
+		{
+			case 1://beach view
+				if(n==1)//	+king
+					search_for_vacant_rooms(156,170);
+				else if(n==2)//	+double
+					search_for_vacant_rooms(181,182);
+				else if(n==3)//	+(king+cot)
+					search_for_vacant_rooms(186,190);
+				return;
+			case 2:// road view
+				if(n==1)// +king
+					search_for_vacant_rooms(171,180);
+				else if(n==2)// + double
+					search_for_vacant_rooms(183,185);
+				else if(n==3)// +(king + cot)
+					search_for_vacant_rooms(191,195);
+				return;
+			case 3:return;
+			default:printf("PLEASE ENTER A VALID OPTION\n");
+					//getch();
+				}
+		}
+}
+
+
+void luxury_room()
+{
+	int choice;
+	while(1)
+	{
+		
+		system("clear");
+		printf("\n\n\n\n\n\t\t\t\tHOTEL CALIFORNIA\n\n\t\t\t--LUXURY ROOMS--\n\n\n");
+		printf("\t\t\tCHOOSE THE TYPE OF ROOM\n\n\t\t\t\t1.KING SIZE BED\n\n\t\t\t\t2.DOUBLE BED\n\n\t\t\t\t3.KING SIZE BED + SINGLE COT\n\n\t\t\t\t4.BACK");
+		scanf("%d",&choice);
+		switch(choice)
+		{
+			case 1:luxury_room_choose(1);
+					return;
+			case 2:luxury_room_choose(2);
+				   return;
+			case 3:luxury_room_choose(3);
+				   return;
+			case 4:return;
+			default:printf("PLEASE ENTER A VALID OPTION\n");
+				//getch();
+		}
+	}
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+//--------------------------------------------------------------------------------------------
+//	FUNCTION -1) To take in user requirements for the rooms
+// 			  2) To check the availability of the specified rooms (reads the file where reservation info is stored)
+// 			  3) IF available call a function "book_room()" to write the data in to the file
+void check()
+{		int choice;
+			
+			system("clear");
+			printf("\n\n\n\n\n\t\t\t\tHOTEL CALIFORNIA\n\n\n");
+			printf("\t\t\tCHOOSE THE TYPE OF ROOM\n\n\t\t\t\t1.NORMAL ROOM\n\n\t\t\t\t2.LUXURY ROOM\n\n\t\t\t\t3.SUITE\n\n\t\t\t\t4.EXIT");
+			printf("\n\n\n\t\t\tENTER OPTION- ");
+			scanf("%d",&choice);
+		
+			switch(choice)
+				{		case 1:	normal_room();
+								break;
+						case 2:
+								luxury_room();
+								break;
+						case 3:
+								suite();
+								break;
+						case 4:return;
+						default:printf("\n\n\t\t\tINVALID ENTRY\n");
+								//getch();
+				}	
+		
+	
+
+
+
+}
+
+//--------------------------------------------------------------------------------------------
+
+
+
+//--------------------------------------------------------------------------------------------
+//	FUNCTION -1) to cancel a particular  reservation
+void cancel_reservation()
+{	
+	system("clear");
+	Booked temp,*out;
+	out=&temp;
+	char n[20];
+	int t,rn,status=2;
+	printf("\n\n\n\n\n\t\t\t\tHOTEL CALIFORNIA\n\n\t\t\t--CANCEL RESERVATION--\n\n\n");
+	printf("\n\n\t\tEnter  name: ");
+	scanf("%s",n);
+	printf("\n\n\t\tEnter room no:");
+	scanf("%d",&rn);
+	FILE  *file= fopen("hotel.bin", "rb");
+	FILE  *paste= fopen("temp.bin","wb");
+    if (file != NULL)
+	{
+    
+    		while(!feof( file ))
+    		{
+    			
+    			fread(out, sizeof(Booked), 1, file);
+    		    if(out->room_no==rn && (strcmp(out->name,n)==0))
+    		    	{	printf("\n\nThe reservation is cancelled");
+					}
+				else 
+					{	fwrite(out, sizeof(Booked), 1, paste);
+					}
+    		}
+	}
+    fclose(file);
+    fclose(paste);
+    status=remove("hotel.bin");
+	status=rename("temp.bin", "hotel.bin");
+	printf("\nEnter a n.o. to return");
+    scanf("%d",&t);
+}
+//--------------------------------------------------------------------------------------------
+
+
+
+//--------------------------------------------------------------------------------------------
+void print_category(int no)
+{
+	if(no>=101 && no<=155)// NORMAL ROOMS
+	{
+		printf("NORMAL ROOM WITH: ");
+		if(no>=101 && no<=105)//SINGLE COT
+		{
+			printf("SINGLE COT + ");
+			if(no>=101 && no<=103)
+			{
+				printf("AC + ");
+				if(no==101 || no==102)
+					printf("TV\n");
+				else
+					printf("NO TV\n");
+				return;
+			}
+			else
+			{
+				printf("NO AC + ");
+				if(no==104)
+					printf("TV\n");
+				else
+					printf("NO TV\n");
+				return;
+			}
+		}
+		if(no>=106 && no<=135)//KING BED
+		{
+			printf("KING BED + ");
+			if(no>=106 && no<=125)
+			{
+				printf("AC + ");
+				if(no>=106 && no<=120)
+					printf("TV\n");
+				else
+					printf("NO TV\n");
+				return;
+			}
+			else
+			{
+				printf("NO AC + ");
+				if(no>=126 && no<=130)
+					printf("TV\n");
+				else
+					printf("NO TV\n");
+				return;
+			}
+		}
+		if(no>=136 && no<=145)// DOUBLE COT
+		{
+			printf("DOUBLE COT + ");
+			if(no>=136 && no<=140)
+			{
+				printf("AC + ");
+				if(no==140)
+					printf("NO TV\n");
+				else
+					printf("TV\n");
+				return;
+			}
+			else
+			{
+				printf("NO AC + ");
+				if(no==145)
+					printf("NO TV\n");
+				else
+					printf("TV\n");
+			}
+		}
+		else//KING + SINGLE
+		{
+			printf("KING + SINGLE COT + ");
+			if(no>=146 && no<=150)
+			{
+				printf("AC + ");
+				if(no==150)
+					printf("NO TV\n");
+				else
+					printf("TV\n");
+				return;
+			}
+			else
+			{
+				printf("NO AC + ");
+				if(no==155)
+					printf("NO TV\n");
+				else
+					printf("TV\n");
+				return;
+			}
+		}
+	}
+	if(no>=156 && no<=195)//LUXURY ROOMS
+	{
+		printf("LUXURY ROOMS WITH: ");
+		if(no>=156 && no<=180)//KING
+		{
+			printf("KING BED + ");
+			if(no>=156 && no<=170)
+				printf("BEACH VIEW\n");
+			else
+				printf("CITY VIEW\n");
+			return;
+		}
+		if(no>=181 && no<=185)//DOUBLE BED
+		{
+			printf("DOUBLE BED + ");
+			if(no==181 || no==182)
+				printf("BEACH VIEW\n");
+			else
+				printf("CITY VIEW\n");
+			return;
+		}
+		else//KING + COT
+		{
+			printf("KING + SINGLE COT + ");
+			if(no>=186 && no<=190)
+				printf("BEACH VIEW\n");
+			else
+				printf("CITY VIEW\n");
+			return;
+		}
+	}
+	else//SUITES
+	{
+		if(no==200)//HONEYMOON SUITE
+		{
+			printf("HONEYMOON SUITE\n");
+			return;
+		}
+		else//PENTHOUSE
+		{
+			printf("PENTHOUSE SUITE WITH: ");
+			if(no==196 || no==197)//BEACH VIEW
+			{
+				printf("BEACH VIEW + ");
+				if(no==196)
+					printf("INDOOR POOL\n");
+				else
+					printf("INDOOR JACUZZI\n");
+				return;
+			}
+			else//CITY VIEW
+			{
+				printf("CITY VIEW + ");
+				if(no==198)
+					printf("INDOOR POOL\n");
+				else
+					printf("INDOOR JACUZZI\n");
+				return;
+			}
+		}
+	}
+}
+//	FUNCTION -1) to display your the reservations
+void reservation_view()
+{
+	int d,m,y,master=0;
+	char name[20];
+	Booked temp,*out;
+	out=&temp;
+	system("clear");
+	printf("\n\n\n\n\n\t\t\t\tHOTEL CALIFORNIA\n\n\t\t\t--VIEW RESERVATIONS--\n\n\n");
+	printf("ENTER THE NAME AND CHECK IN DATE (SEPARATED BY SPACES IN THE FORMAT DD MM YYYY)\n");
+	scanf("%s %d %d %d",name,&d,&m,&y);
+	FILE * file= fopen("hotel.bin", "rb");
+	if((d==0)&&(m==0)&&(y==0))
+	{
+		printf("\n\nADMIN\n\n");
+		master=1;
+	}
+    if (file != NULL)
+    {
+    	while(!feof( file ))
+    	{
+    		fread(out, sizeof(Booked), 1, file);
+    		if(((strcmp(out->name,name) == 0) && (out->in_date.year == y) && (out->in_date.month == m) && (out->in_date.day == d))||(master==1))
+    	 	{
+    			printf("NAME:\t\t\t%s\n",out->name);
+    			printf("CATEGORY:\t\t");
+    			print_category(out->room_no);
+    			printf("NO OF OCCUPANTS:\t%d\n",out->no_occupants);
+    			printf("ROOM N.O.:\t\t%d\n",out->room_no);
+    			printf("CHECK IN:\t\t%d/%d/%d\n",out->in_date.day,out->in_date.month,out->in_date.year);
+    			printf("CHECK OUT:\t\t%d/%d/%d\n\n",out->out_date.day,out->out_date.month,out->out_date.year);
+    			if(master!=1)
+    			{
+    				printf("\nEnter a number to return");
+    				scanf("%d",&d);
+    				//getch();
+    				return;
+    			}
+    		}
+    	}
+    }
+    if(master!=1)
+    	printf("NO RESERVATION OF GIVEN NAME AND DATE FOUND OR THE ROOMS OF THAT CATEGORY HAVE BEEN RESERVED\n");
+    printf("\nEnter a number to return");
+    scanf("%d",&d);
+    //getch();
+    fclose(file);
+}
+//--------------------------------------------------------------------------------------------
+
+int main()
+{		
+		fopen("hotel.bin","ab");
+		int choice;
+		while(1)
+		{	
+			system("clear");
+			printf("\n\n\n\n\n\t\t\t\tHOTEL CALIFORNIA\n\n\n");
+			printf("\t\t\t\tMENU\n\n\t\t\t\t1.RESERVE\n\n\t\t\t\t2.VIEW RESERVATION\n\n\t\t\t\t3.CANCEL RESERVATION\n\n\t\t\t\t4.EXIT");
+			printf("\n\n\n\t\t\tENTER OPTION- ");
+			scanf("%d",&choice);
+			switch(choice)
+			{		case 1:check();
+						   break;
+					case 2:reservation_view();
+						   break;
+					case 3:cancel_reservation();
+						   break;
+					case 4:return 0;
+					default:printf("\n\n\t\t\tINVALID ENTRY\n");
+							//getch();
+			}
+		}
+}	
+// #########################################################################################################################################
+//############################################################CODE##########################################################################
+//##########################################################################################################################################
+
